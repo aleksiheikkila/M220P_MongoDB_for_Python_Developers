@@ -1,0 +1,3 @@
+{
+  "tests/test_connection_pooling.py::test_max_pool_size": true
+}
