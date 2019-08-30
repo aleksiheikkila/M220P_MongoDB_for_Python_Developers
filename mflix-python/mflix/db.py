@@ -6,7 +6,11 @@ Each method has a short description, and the methods you must implement have
 docstrings with a short explanation of the task.
 
 Look out for TODO markers for additional help. Good luck!
+
+# This turned out to be a good resource(?):
+https://api.mongodb.com/python/current/api/index.html
 """
+
 
 
 from flask import current_app, g
@@ -47,7 +51,9 @@ def get_db():
         MFLIX_DB_URI,
         # TODO: Connection Pooling
         # Set the maximum connection pool size to 50 active connections.
+        maxPoolSize = 50,
         # TODO: Timeouts
+        wTimeoutMS = 2500,
         # Set the write timeout limit to 2500 milliseconds.
         )[MFLIX_DB_NAME]
     
@@ -273,15 +279,6 @@ def get_movie(id):
 
         # TODO: Get Comments
         # Implement the required pipeline.
-        #pipeline = [
-        #    {
-        #        "$match": {
-        #            "_id": ObjectId(id)
-        #        }
-        #    }
-        #]
-
-
         pipeline = [
             {"$match": {"_id": ObjectId(id)}},
             {'$lookup': {
@@ -308,7 +305,8 @@ def get_movie(id):
 
     # TODO: Error Handling
     # If an invalid ID is passed to `get_movie`, it should return None.
-    except (StopIteration) as _:
+    except (StopIteration, InvalidId) as _:
+        # InvalidId Raised when trying to create an ObjectId from invalid data.
 
         """
         Ticket: Error Handling
@@ -317,7 +315,6 @@ def get_movie(id):
         StopIteration exception is handled. Both exceptions should result in
         `get_movie` returning None.
         """
-
         return None
 
     except Exception as e:
